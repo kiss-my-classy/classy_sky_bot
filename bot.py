@@ -8,6 +8,8 @@ from aiogram.filters import Command
 from aiogram.types import Message
 
 from parser import (
+    get_date,
+    list_daily,
     get_shard_status,
     get_next_shard_info,
     get_events,
@@ -29,32 +31,6 @@ bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 
 
-# ================= вспомогательная функция =================
-def format_daily() -> list[str]:
-    """
-    Возвращает ежедневные задания, если дата в DAILY_JSON совпадает с текущей датой Sky (TZ)
-    """
-    if not DAILY_JSON:
-        return []
-
-    try:
-        data = json.loads(DAILY_JSON)
-    except json.JSONDecodeError:
-        return []
-
-    today = datetime.now(TZ).date().isoformat()
-
-    if data.get("date") != today:
-        return []
-
-    return [
-        task["text"]
-        for task in data.get("tasks", [])
-        if isinstance(task, dict) and "text" in task
-    ]
-
-
-
 # ================= команды =================
 @dp.message(Command("start"))
 async def start(message: Message):
@@ -72,7 +48,7 @@ async def start(message: Message):
 
 @dp.message(Command("daily"))
 async def daily(message: Message):
-    tasks = format_daily()
+    tasks = list_daily()
 
     if not tasks:
         await message.answer(
@@ -80,8 +56,7 @@ async def daily(message: Message):
             "Простите за неудобства :("
         )
         return
-    data = json.loads(DAILY_JSON)
-    text = ["✅ Ежедневные задания ✅\n", data.get("date")]
+    text = ["✅ Ежедневные задания ✅ ", get_date(), "\n"]
     for task in tasks:
         text.append(f"📌 {task}")
 
