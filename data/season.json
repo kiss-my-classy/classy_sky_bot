@@ -1,0 +1,12 @@
+{
+  "season_active": true,
+  "season_name": "Сезон Миграции",
+  "season_start": "2025-11-01",
+  "season_end": "2026-01-04",
+  "double_events": [
+    {
+      "start": "2025-12-31",
+      "end": "2026-01-14"
+    }
+  ]
+}
