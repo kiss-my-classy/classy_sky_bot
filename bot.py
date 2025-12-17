@@ -81,10 +81,9 @@ async def daily(message: Message):
         return
 
     text = ["✅ Ежедневные задания ✅\n"]
-    for task in tasks:
-        text.append(f"📌 {task}")
-
+    text.extend(f"📌 {task}" for task in format_daily())
     await message.answer("\n".join(text))
+
 
 
 @dp.message(Command("shards"))
