@@ -48,7 +48,7 @@ def format_daily() -> list[str]:
         return []
 
     return [
-        task["text"] + " " + format_daily()
+        task["text"] + " " + data.get("date")
         for task in data.get("tasks", [])
         if isinstance(task, dict) and "text" in task
     ]
