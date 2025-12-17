@@ -1,7 +1,5 @@
 import asyncio
 import os
-import json
-from datetime import datetime
 
 from aiogram import Bot, Dispatcher
 from aiogram.filters import Command
@@ -21,7 +19,6 @@ from parser import (
 from parser.time_utils import TZ
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
-DAILY_JSON = os.getenv("DAILY_JSON")
 
 if not BOT_TOKEN:
     raise RuntimeError("BOT_TOKEN is not set")
@@ -56,7 +53,7 @@ async def daily(message: Message):
             "Простите за неудобства :("
         )
         return
-    text = ["✅ Ежедневные задания ✅ ", get_date(), "\n"]
+    text = [f"✅ Ежедневные задания за {get_date()} ✅\n"]
     for task in tasks:
         text.append(f"📌 {task}")
 

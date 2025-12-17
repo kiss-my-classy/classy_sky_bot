@@ -3,7 +3,7 @@ from .time_utils import TZ
 import os
 import json
 
-def get_data() -> dict:
+def load_daily_config() -> dict:
     raw = os.getenv("DAILY_JSON")
     if not raw:
         return {}
@@ -13,10 +13,10 @@ def get_data() -> dict:
         return {}
 
 def get_date() -> str:
-    return get_data().get("date", "")
+    return load_daily_config().get("date", "")
 
 def get_tasks() -> list[dict]:
-    return get_data().get("tasks", [])
+    return load_daily_config().get("tasks", [])
 
 def list_daily() -> list[str]:
     """
