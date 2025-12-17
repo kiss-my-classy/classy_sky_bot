@@ -48,7 +48,7 @@ def format_daily() -> list[str]:
         return []
 
     return [
-        task["text"] + " " + data.get("date")
+        task["text"]
         for task in data.get("tasks", [])
         if isinstance(task, dict) and "text" in task
     ]
@@ -80,8 +80,8 @@ async def daily(message: Message):
             "Простите за неудобства :("
         )
         return
-
-    text = ["✅ Ежедневные задания ✅\n"]
+    data = json.loads(DAILY_JSON)
+    text = ["✅ Ежедневные задания ✅\n", data.get("date")]
     for task in tasks:
         text.append(f"📌 {task}")
 
