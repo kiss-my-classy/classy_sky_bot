@@ -16,6 +16,9 @@ def format_daily() -> list[str]:
         return []
 
     today = datetime.now(TZ).date().isoformat()
+    print("Sky today:", today.isoformat())
+    print("JSON date:", data.get("date"))
+
 
     if data.get("date") != today:
         return []
