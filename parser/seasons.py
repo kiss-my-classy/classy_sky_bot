@@ -1,7 +1,8 @@
 import json
 import os
 from datetime import datetime, timedelta
-from .time_utils import TZ, start_of_day, MONTHS_RU
+
+from .time_utils import TZ, start_of_day, MONTHS_RU, format_delta_hm
 
 # ================= константы =================
 
@@ -56,7 +57,10 @@ def build_double_days(double_events: list[dict]) -> set[datetime]:
     return double_days
 
 
-def get_next_double_event(double_events: list[dict], today: datetime) -> tuple[datetime, datetime] | None:
+def get_next_double_event(
+    double_events: list[dict],
+    today: datetime
+) -> tuple[datetime, datetime] | None:
     future_events = []
 
     for event in double_events:
@@ -81,7 +85,8 @@ def calculate_season_progress() -> dict | None:
     if not config.get("season_active", False):
         return None
 
-    today = get_today()
+    now = datetime.now(TZ)
+    today = start_of_day(now)
 
     season_start = parse_date(config["season_start"])
     season_end = parse_date(config["season_end"])
@@ -89,9 +94,24 @@ def calculate_season_progress() -> dict | None:
     if today > season_end:
         return None
 
-    days_left = (season_end - today).days + 1
-    if days_left <= 0:
+    # конец сезона — конец дня
+    season_end_dt = TZ.localize(
+        datetime(
+            season_end.year,
+            season_end.month,
+            season_end.day,
+            23, 59, 59
+        )
+    )
+
+    time_left = season_end_dt - now
+    if time_left.total_seconds() <= 0:
         return None
+
+    days_left = time_left.days
+    hours_left, _ = format_delta_hm(
+        time_left - timedelta(days=days_left)
+    )
 
     double_events = config.get("double_events", [])
     double_days = build_double_days(double_events)
@@ -116,9 +136,10 @@ def calculate_season_progress() -> dict | None:
     return {
         "season_name": config.get("season_name", "Без названия"),
         "days_left": days_left,
+        "hours_left": hours_left,
         "candles_no_pass": candles_no_pass,
         "candles_with_pass": candles_with_pass,
-        "next_double": next_double
+        "next_double": next_double,
     }
 
 
@@ -136,7 +157,8 @@ def format_season_message(stats: dict | None) -> str:
 
     text = (
         f"{stats['season_name']}\n"
-        f"До конца сезона осталось {stats['days_left']} дней 🗓️\n\n"
+        f"До конца сезона осталось "
+        f"{stats['days_left']} дней {stats['hours_left']} часов 🗓️\n\n"
         f"Сезонных свечей осталось:\n"
         f"🔹 {stats['candles_no_pass']} без сезонного пропуска\n"
         f"🔸 {stats['candles_with_pass']} с сезонным пропуском\n"
