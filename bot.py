@@ -128,24 +128,56 @@ async def season(message: Message):
 async def candles(message: Message):
     args = message.text.split()
 
-    if len(args) != 3:
+    # /candles без параметров
+    if len(args) == 1:
+        await message.answer(
+            "🕯️ Подсчёт свечей\n\n"
+            "Команда позволяет узнать, сколько свечей вы накопите "
+            "к определённой дате.\n\n"
+            "📌 Формат:\n"
+            "/candles <сейчас> <дата> <в_день>\n\n"
+            "📅 Дата указывается в формате YYYY-MM-DD\n"
+            "🔥 Сбор в день — от 1 до 21 свечи\n\n"
+            "✅ Пример:\n"
+            "/candles 150 2025-02-28 18"
+        )
+        return
+
+    # неверное количество аргументов
+    if len(args) != 4:
         await message.answer(
             "❌ Неверный формат команды\n\n"
+            "Используйте:\n"
+            "/candles <сейчас> <дата> <в_день>\n\n"
             "Пример:\n"
-            "/candles 150 2025-02-28"
+            "/candles 150 2025-02-28 18"
         )
         return
 
     try:
         start_candles = int(args[1])
         target_date = args[2]
+        candles_per_day = int(args[3])
     except ValueError:
-        await message.answer("❌ Количество свечей должно быть числом")
+        await message.answer(
+            "❌ Ошибка ввода\n"
+            "Количество свечей должно быть числом"
+        )
         return
 
-    result = calculate_candles(start_candles, target_date)
-    text = format_candle_message(result)
+    try:
+        result = calculate_candles(
+            start_candles=start_candles,
+            target_date_str=target_date,
+            candles_per_day=candles_per_day
+        )
+    except ValueError:
+        await message.answer(
+            "❌ Количество свечей в день должно быть от 1 до 21"
+        )
+        return
 
+    text = format_candle_message(result)
     await message.answer(text)
 
 # ================= запуск =================
