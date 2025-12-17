@@ -1,15 +1,7 @@
 import json
-from pathlib import Path
+import os
 from datetime import datetime, timedelta
 from .time_utils import TZ, start_of_day, MONTHS_RU
-
-
-
-# ================= пути =================
-
-# путь относительно ЭТОГО файла
-DATA_PATH = Path(__file__).resolve().parent.parent / "data" / "season.json"
-
 
 # ================= константы =================
 
@@ -23,8 +15,18 @@ CANDLES_WITH_PASS_DOUBLE = 7
 # ================= загрузка =================
 
 def load_season_config() -> dict:
-    with open(DATA_PATH, "r", encoding="utf-8") as f:
-        return json.load(f)
+    """
+    Загружает данные сезона из переменной окружения SEASON_JSON.
+    Если переменная не задана или некорректна, возвращает пустой словарь.
+    """
+    raw = os.getenv("SEASON_JSON")
+    if not raw:
+        return {}
+
+    try:
+        return json.loads(raw)
+    except json.JSONDecodeError:
+        return {}
 
 
 # ================= даты =================
@@ -121,10 +123,12 @@ def calculate_season_progress() -> dict | None:
 
 
 # ================= форматирование =================
+
 def format_ru_date(dt: datetime) -> str:
     day = f"{dt.day:02d}"
     month = MONTHS_RU[dt.month - 1]
     return f"{day} {month}"
+
 
 def format_season_message(stats: dict | None) -> str:
     if stats is None:

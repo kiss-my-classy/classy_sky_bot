@@ -14,10 +14,10 @@ from parser import (
     calculate_season_progress,
     format_season_message
 )
-from parser.time_utils import TZ  # чтобы использовать таймзону
+from parser.time_utils import TZ
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
-DAILY_JSON = os.getenv("DAILY_JSON")  # вариант А — JSON прямо в переменной окружения
+DAILY_JSON = os.getenv("DAILY_JSON")
 
 if not BOT_TOKEN:
     raise RuntimeError("BOT_TOKEN is not set")
