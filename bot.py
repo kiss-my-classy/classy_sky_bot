@@ -12,7 +12,9 @@ from parser import (
     get_next_shard_info,
     get_events,
     calculate_season_progress,
-    format_season_message
+    format_season_message,
+    calculate_candles,
+    format_candle_message
 )
 from parser.time_utils import TZ
 
@@ -61,7 +63,8 @@ async def start(message: Message):
         "✅ /daily — дейлики\n"
         "💠 /shards — когда падают осколки\n"
         "🔥 /schedule — время фарма\n"
-        "🌸 /season — информация о сезоне\n\n"
+        "🌸 /season — информация о сезоне\n"
+        "🕯️ /candles — подсчёт свечей\n\n"
         "🔄 Информация об обновлениях - @classy_sky_dev"
     )
 
@@ -121,6 +124,29 @@ async def season(message: Message):
 
     await message.answer(text)
 
+@dp.message(Command("candles"))
+async def candles(message: Message):
+    args = message.text.split()
+
+    if len(args) != 3:
+        await message.answer(
+            "❌ Неверный формат команды\n\n"
+            "Пример:\n"
+            "/candles 150 2025-02-28"
+        )
+        return
+
+    try:
+        start_candles = int(args[1])
+        target_date = args[2]
+    except ValueError:
+        await message.answer("❌ Количество свечей должно быть числом")
+        return
+
+    result = calculate_candles(start_candles, target_date)
+    text = format_candle_message(result)
+
+    await message.answer(text)
 
 # ================= запуск =================
 async def main():
