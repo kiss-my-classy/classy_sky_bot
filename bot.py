@@ -1,25 +1,35 @@
 import asyncio
 import os
-from dotenv import load_dotenv
 
 from aiogram import Bot, Dispatcher
 from aiogram.filters import Command
 from aiogram.types import Message
 
-from parser import format_daily, get_shard_status, get_next_shard_info, get_events, calculate_season_progress, format_season_message
+from parser import (
+    format_daily,
+    get_shard_status,
+    get_next_shard_info,
+    get_events,
+    calculate_season_progress,
+    format_season_message
+)
 
-load_dotenv()
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
+if not BOT_TOKEN:
+    raise RuntimeError("BOT_TOKEN is not set")
+
+
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
+
 
 @dp.message(Command("start"))
 async def start(message: Message):
     await message.answer(
         "Привет, путешественник! ✨\n"
-        "Я помогу тебе не пропустить важное в игре Sky: Children of the Light\n"
+        "Я помогу тебе не пропустить важное в игре Sky: Children of the Light\n\n"
         "✅ /daily — дейлики\n"
         "💠 /shards — когда падают осколки\n"
         "🔥 /schedule — время фарма\n"
@@ -28,13 +38,16 @@ async def start(message: Message):
     )
 
 
-#=================дейлики=================
+# ================= дейлики =================
 @dp.message(Command("daily"))
 async def daily(message: Message):
     tasks = format_daily()
 
     if not tasks:
-        await message.answer("Создатель ещё спит и не обновил задания💤 Простите за неудобства:(")
+        await message.answer(
+            "Создатель ещё спит и не обновил задания 💤\n"
+            "Простите за неудобства :("
+        )
         return
 
     text = ["✅ Ежедневные задания ✅\n"]
@@ -43,7 +56,8 @@ async def daily(message: Message):
 
     await message.answer("\n".join(text))
 
-#=================осколки=================
+
+# ================= осколки =================
 @dp.message(Command("shards"))
 async def shards(message: Message):
     status = get_shard_status()
@@ -63,14 +77,15 @@ async def shards(message: Message):
         f"Следующий осколок {color} цвета упадёт 🗓️ {day_num} {month}"
     )
 
-#=================фарм-объекты=================
+
+# ================= фарм =================
 @dp.message(Command("schedule"))
 async def schedule(message: Message):
     events = get_events()
-    text = "🕯️ Фарм:\n\n" + "\n".join(events)
-    await message.answer(text)
+    await message.answer("🕯️ Фарм:\n\n" + "\n".join(events))
 
-#=================сезон=================
+
+# ================= сезон =================
 @dp.message(Command("season"))
 async def season(message: Message):
     stats = calculate_season_progress()
@@ -82,6 +97,8 @@ async def season(message: Message):
 
     await message.answer(text)
 
+
+# ================= запуск =================
 async def main():
     await dp.start_polling(bot)
 
