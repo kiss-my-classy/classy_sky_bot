@@ -86,9 +86,6 @@ async def daily(message: Message):
         text.append(f"📌 {task}")
 
     await message.answer("\n".join(text))
-    text = ["✅ Ежедневные задания ✅\n"]
-    text.extend(f"📌 {task}" for task in format_daily())
-    await message.answer("\n".join(text))
 
 
 
