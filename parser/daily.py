@@ -1,6 +1,10 @@
 import json
 import os
 from datetime import datetime
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 from .time_utils import TZ
 
@@ -16,8 +20,9 @@ def format_daily() -> list[str]:
         return []
 
     today = datetime.now(TZ).date().isoformat()
-    print("Sky today:", today.isoformat())
-    print("JSON date:", data.get("date"))
+    logger.info("Sky today: %s", today.isoformat())
+    logger.info("JSON date: %s", data.get("date"))
+
 
 
     if data.get("date") != today:
