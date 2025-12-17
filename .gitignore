@@ -1,4 +1,7 @@
 .env
+__init__
 __pycache__/
 daily.json
+season.json
+time_utils.py
 *.pyc

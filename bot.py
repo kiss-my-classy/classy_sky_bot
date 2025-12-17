@@ -6,7 +6,7 @@ from aiogram import Bot, Dispatcher
 from aiogram.filters import Command
 from aiogram.types import Message
 
-from parser import format_daily, get_shard_status, get_next_shard_info, get_events
+from parser import format_daily, get_shard_status, get_next_shard_info, get_events, calculate_season_progress, format_season_message
 
 load_dotenv()
 
@@ -23,6 +23,8 @@ async def start(message: Message):
         "✅ /daily — дейлики\n"
         "💠 /shards — когда падают осколки\n"
         "🔥 /schedule — время фарма\n"
+        "🌸 /season — информация о сезоне\n\n"
+        "🔄 Информация об обновлениях - @classy_sky_dev"
     )
 
 
@@ -68,6 +70,17 @@ async def schedule(message: Message):
     text = "🕯️ Фарм:\n\n" + "\n".join(events)
     await message.answer(text)
 
+#=================сезон=================
+@dp.message(Command("season"))
+async def season(message: Message):
+    stats = calculate_season_progress()
+    text = format_season_message(stats)
+
+    if not text:
+        await message.answer("🌱 Сейчас активного сезона нет")
+        return
+
+    await message.answer(text)
 
 async def main():
     await dp.start_polling(bot)
