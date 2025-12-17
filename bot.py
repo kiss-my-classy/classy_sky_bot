@@ -1,21 +1,23 @@
 import asyncio
 import os
+import json
+from datetime import datetime
 
 from aiogram import Bot, Dispatcher
 from aiogram.filters import Command
 from aiogram.types import Message
 
 from parser import (
-    format_daily,
     get_shard_status,
     get_next_shard_info,
     get_events,
     calculate_season_progress,
     format_season_message
 )
-
+from parser.time_utils import TZ  # чтобы использовать таймзону
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
+DAILY_JSON = os.getenv("DAILY_JSON")  # вариант А — JSON прямо в переменной окружения
 
 if not BOT_TOKEN:
     raise RuntimeError("BOT_TOKEN is not set")
@@ -25,6 +27,32 @@ bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 
 
+# ================= вспомогательная функция =================
+def format_daily() -> list[str]:
+    """
+    Возвращает ежедневные задания, если дата в DAILY_JSON совпадает с текущей датой Sky (TZ)
+    """
+    if not DAILY_JSON:
+        return []
+
+    try:
+        data = json.loads(DAILY_JSON)
+    except json.JSONDecodeError:
+        return []
+
+    today = datetime.now(TZ).date().isoformat()
+
+    if data.get("date") != today:
+        return []
+
+    return [
+        task["text"]
+        for task in data.get("tasks", [])
+        if isinstance(task, dict) and "text" in task
+    ]
+
+
+# ================= команды =================
 @dp.message(Command("start"))
 async def start(message: Message):
     await message.answer(
@@ -38,7 +66,6 @@ async def start(message: Message):
     )
 
 
-# ================= дейлики =================
 @dp.message(Command("daily"))
 async def daily(message: Message):
     tasks = format_daily()
@@ -57,7 +84,6 @@ async def daily(message: Message):
     await message.answer("\n".join(text))
 
 
-# ================= осколки =================
 @dp.message(Command("shards"))
 async def shards(message: Message):
     status = get_shard_status()
@@ -78,14 +104,12 @@ async def shards(message: Message):
     )
 
 
-# ================= фарм =================
 @dp.message(Command("schedule"))
 async def schedule(message: Message):
     events = get_events()
     await message.answer("🕯️ Фарм:\n\n" + "\n".join(events))
 
 
-# ================= сезон =================
 @dp.message(Command("season"))
 async def season(message: Message):
     stats = calculate_season_progress()

@@ -1,27 +1,15 @@
-import json
-import os
 from datetime import datetime
-import logging
-from datetime import datetime, timedelta
 from .time_utils import TZ
 
-logger = logging.getLogger(__name__)
-
-
-def format_daily() -> list[str]:
-    raw = os.getenv("DAILY_JSON")
-    if not raw:
-        return []
-
-    try:
-        data = json.loads(raw)
-    except json.JSONDecodeError:
+def format_daily(data: dict) -> list[str]:
+    """
+    Возвращает ежедневные задания из переданного словаря data,
+    если дата совпадает с текущей датой Sky (America/Los_Angeles).
+    """
+    if not data:
         return []
 
     today = datetime.now(TZ).date().isoformat()
-    logger.info("Sky today: %s", today.isoformat())
-    logger.info("Sky yesterday: %s", yesterday.isoformat())
-    logger.info("JSON date: %s", data.get("date"))
 
     if data.get("date") != today:
         return []
