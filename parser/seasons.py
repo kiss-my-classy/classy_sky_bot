@@ -1,8 +1,6 @@
-import json
-import os
 from datetime import datetime, timedelta
-
 from .time_utils import TZ, start_of_day, MONTHS_RU, format_delta_hm
+from .helper_fcn import load_json_from_env
 
 # ================= константы =================
 
@@ -16,19 +14,7 @@ CANDLES_WITH_PASS_DOUBLE = 7
 # ================= загрузка =================
 
 def load_season_config() -> dict:
-    """
-    Загружает данные сезона из переменной окружения SEASON_JSON.
-    Если переменная не задана или некорректна, возвращает пустой словарь.
-    """
-    raw = os.getenv("SEASON_JSON")
-    if not raw:
-        return {}
-
-    try:
-        return json.loads(raw)
-    except json.JSONDecodeError:
-        return {}
-
+    return load_json_from_env("SEASON_JSON")
 
 # ================= даты =================
 

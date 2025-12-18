@@ -1,16 +1,9 @@
 from datetime import datetime
 from .time_utils import TZ
-import os
-import json
+from .helper_fcn import load_json_from_env
 
 def load_daily_config() -> dict:
-    raw = os.getenv("DAILY_JSON")
-    if not raw:
-        return {}
-    try:
-        return json.loads(raw)
-    except json.JSONDecodeError:
-        return {}
+    return load_json_from_env("DAILY_JSON")
 
 def get_date() -> str:
     return load_daily_config().get("date", "")

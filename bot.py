@@ -14,7 +14,8 @@ from parser import (
     calculate_season_progress,
     format_season_message,
     calculate_candles,
-    format_candle_message
+    format_candle_message,
+    format_spirits_message
 )
 from parser.time_utils import TZ
 
@@ -122,7 +123,7 @@ async def candles(message: Message):
         await message.answer(
             "❌ Неверный формат команды\n\n"
             "Используйте:\n"
-            "/candles <сейчас> <дата> <в_день>\n\n"
+            "/candles <свечей_сейчас> <дата> <в_день>\n\n"
             "Пример:\n"
             "/candles 150 2025-02-28 18"
         )
@@ -152,6 +153,16 @@ async def candles(message: Message):
         return
 
     text = format_candle_message(result)
+    await message.answer(text)
+
+@dp.message(Command("spirits"))
+async def spirits(message: Message):
+    text = format_spirits_message()
+
+    if not text:
+        await message.answer("😞 Информации о ближайшем странствующем духе нет")
+        return
+
     await message.answer(text)
 
 # ================= запуск =================
