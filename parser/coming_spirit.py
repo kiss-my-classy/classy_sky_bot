@@ -44,7 +44,7 @@ def format_spirits_message() -> str:
         # дух ещё не пришёл
         if now < start:
             return (
-                f"🕺 **{name}**\n"
+                f"🕺 {name}\n"
                 f"📅 {start.strftime('%d.%m %H:%M')} — {end.strftime('%d.%m %H:%M')}"
             )
 
@@ -54,7 +54,7 @@ def format_spirits_message() -> str:
             hours, minutes = format_delta_hm(delta)
 
             return (
-                f"🕺 **{name}**\n"
+                f"🕺 {name}\n"
                 f"⏳ Осталось: {hours} ч {minutes} мин"
             )
 
