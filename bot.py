@@ -13,11 +13,12 @@ from parser import (
     get_events,
     calculate_season_progress,
     format_season_message,
+    calculate_event_progress,
+    format_event_message,
     calculate_candles,
     format_candle_message,
     format_spirits_message
 )
-from parser.time_utils import TZ
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
@@ -39,8 +40,9 @@ async def start(message: Message):
         "💠 /shards — когда падают осколки\n"
         "🔥 /schedule — время фарма\n"
         "🌸 /season — информация о сезоне\n"
+        "🎟️ /events — информация о событии\n"
         "🕯️ /candles — подсчёт свечей\n"
-        "🕯️ /spirits — информация о странствующих духах\n\n"
+        "🕺 /spirits — информация о странствующих духах\n\n"
         "🔄 Информация об обновлениях - @classy_sky_dev"
     )
 
@@ -99,6 +101,18 @@ async def season(message: Message):
         return
 
     await message.answer(text)
+
+@dp.message(Command("event"))
+async def event(message: Message):
+    stats = calculate_event_progress()
+    text = format_event_message(stats)
+
+    if not text:
+        await message.answer("🎫 Сейчас активных событий нет")
+        return
+
+    await message.answer(text)
+
 
 @dp.message(Command("candles"))
 async def candles(message: Message):
