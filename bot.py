@@ -39,7 +39,7 @@ async def start(message: Message):
         "✅ /daily — дейлики\n"
         "💠 /shards — когда падают осколки\n"
         "🔥 /schedule — время фарма\n"
-        "🌸 /season — информация о сезоне\n"
+        "🌸 /seasons — информация о сезоне\n"
         "🎟️ /events — информация о событии\n"
         "🕯️ /candles — подсчёт свечей\n"
         "🕺 /spirits — информация о странствующих духах\n\n"
@@ -91,7 +91,7 @@ async def schedule(message: Message):
     await message.answer("🕯️ Фарм:\n\n" + "\n".join(events))
 
 
-@dp.message(Command("season"))
+@dp.message(Command("seasons"))
 async def season(message: Message):
     stats = calculate_season_progress()
     text = format_season_message(stats)
@@ -102,7 +102,7 @@ async def season(message: Message):
 
     await message.answer(text)
 
-@dp.message(Command("event"))
+@dp.message(Command("events"))
 async def event(message: Message):
     stats = calculate_event_progress()
     text = format_event_message(stats)
