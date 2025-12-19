@@ -39,7 +39,8 @@ async def start(message: Message):
         "💠 /shards — когда падают осколки\n"
         "🔥 /schedule — время фарма\n"
         "🌸 /season — информация о сезоне\n"
-        "🕯️ /candles — подсчёт свечей\n\n"
+        "🕯️ /candles — подсчёт свечей\n"
+        "🕯️ /spirits — информация о странствующих духах\n\n"
         "🔄 Информация об обновлениях - @classy_sky_dev"
     )
 
