@@ -97,7 +97,7 @@ def format_event_message(stats: dict | None) -> str:
         return ""
 
     return (
-        f"🎉 {stats['event_name']}\n"
+        f"❇️ {stats['event_name']}\n\n"
         f"📅 {format_ru_date(stats['event_start'])} — "
         f"{format_ru_date(stats['event_end'])}\n\n"
         f"До конца события осталось "

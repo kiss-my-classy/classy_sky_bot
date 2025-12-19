@@ -108,7 +108,7 @@ async def event(message: Message):
     text = format_event_message(stats)
 
     if not text:
-        await message.answer("🎫 Сейчас активных событий нет")
+        await message.answer("💤 Сейчас активных событий нет")
         return
 
     await message.answer(text)
