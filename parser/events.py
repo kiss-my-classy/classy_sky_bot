@@ -2,12 +2,8 @@ from datetime import datetime, timedelta
 from .time_utils import TZ, start_of_day, MONTHS_RU, format_delta_hm
 from .helper_fcn import load_json_from_env
 
-# ================= константы =================
-
 EVENT_TICKETS_PER_DAY = 5
 
-
-# ================= загрузка =================
 
 def load_event_config() -> dict:
     return load_json_from_env("EVENT_JSON")

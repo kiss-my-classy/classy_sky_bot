@@ -2,7 +2,6 @@ from datetime import datetime, timedelta
 from .time_utils import TZ, start_of_day, MONTHS_RU, format_delta_hm
 from .helper_fcn import load_json_from_env
 
-# ================= константы =================
 
 CANDLES_NO_PASS = 5
 CANDLES_WITH_PASS = 6
@@ -10,8 +9,6 @@ CANDLES_WITH_PASS = 6
 CANDLES_NO_PASS_DOUBLE = 6
 CANDLES_WITH_PASS_DOUBLE = 7
 
-
-# ================= загрузка =================
 
 def load_season_config() -> dict:
     return load_json_from_env("SEASON_JSON")

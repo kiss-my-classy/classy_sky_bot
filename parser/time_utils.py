@@ -18,17 +18,7 @@ MONTHS_RU = [
     "декабря",
 ]
 
-LOCATIONS = [
-    "Остров рассвета",
-    "Полуденная прерия",
-    "Тайный лес",
-    "Долина триумфа",
-    "Золотая пустошь",
-    "Хранилище знаний"
-]
-
 def start_of_day(dt: datetime) -> datetime:
-    """Аналог luxon.startOf('day')"""
     return TZ.localize(datetime(dt.year, dt.month, dt.day))
 
 

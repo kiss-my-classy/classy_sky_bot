@@ -17,10 +17,12 @@ from parser import (
     format_event_message,
     calculate_candles,
     format_candle_message,
-    format_spirits_message
+    format_spirits_message,
+    format_children_list,
+    format_wing_levels
 )
 
-BOT_TOKEN = os.getenv("BOT_TOKEN")
+BOT_TOKEN = BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 if not BOT_TOKEN:
     raise RuntimeError("BOT_TOKEN is not set")
@@ -43,6 +45,9 @@ async def start(message: Message):
         "🎟️ /events — информация о событии\n"
         "🕯️ /candles — подсчёт свечей\n"
         "🕺 /spirits — информация о странствующих духах\n\n"
+        "Дополнительные функции:\n"
+        "🌝 /light_locations — информация о крылатом свете\n"
+        "⚡️ /light_level — информация об уровнях крыльев\n\n"
         "🔄 Информация об обновлениях - @classy_sky_dev"
     )
 
@@ -178,6 +183,16 @@ async def spirits(message: Message):
         await message.answer("😞 Информации о ближайшем странствующем духе нет")
         return
 
+    await message.answer(text)
+
+@dp.message(Command("light_locations"))
+async def children(message: Message):
+    text = format_children_list()
+    await message.answer(text)
+
+@dp.message(Command("light_level"))
+async def wings(message: Message):
+    text = format_wing_levels()
     await message.answer(text)
 
 # ================= запуск =================
