@@ -93,6 +93,7 @@ def get_next_shard_info():
         if weekday in info["no_days"]:
             continue
 
-        return info["color"], day, month
-
+        location = get_shard_location(today)
+        return info["color"], day, month, location
+    
     return None
