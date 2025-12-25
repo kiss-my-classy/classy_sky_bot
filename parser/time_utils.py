@@ -18,6 +18,14 @@ MONTHS_RU = [
     "декабря",
 ]
 
+LOCATIONS = [
+    "Полуденная прерия",
+    "Тайный лес",
+    "Долина триумфа",
+    "Золотая пустошь",
+    "Хранилище знаний",
+]
+
 def start_of_day(dt: datetime) -> datetime:
     return TZ.localize(datetime(dt.year, dt.month, dt.day))
 

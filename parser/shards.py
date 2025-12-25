@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from .time_utils import TZ, start_of_day, format_delta_hm, MONTHS_RU
+from .time_utils import TZ, start_of_day, format_delta_hm, MONTHS_RU, LOCATIONS
 
 LAND_OFFSET = timedelta(minutes=8, seconds=40)
 END_OFFSET = timedelta(hours=4)
@@ -15,6 +15,9 @@ SHARDS_INFO = [
     {"no_days": [3, 4], "interval": RED_INTERVAL,   "offset": timedelta(hours=3, minutes=30), "color": "красного 🔴"},
 ]
 
+def get_shard_location(date: datetime) -> str:
+    index = (date.day - 1) % 5
+    return LOCATIONS[index]
 
 def get_shard_status(days_ahead: int = 0) -> str | None:
     now = datetime.now(TZ)
@@ -45,14 +48,29 @@ def get_shard_status(days_ahead: int = 0) -> str | None:
         if days_ahead == 0:
             if land <= now < end:
                 h, m = format_delta_hm(end - now)
-                return f"Осколок {info['color']} цвета, закончится через 🕐 {h} ч {m} мин"
+                location = get_shard_location(today)
+                return (
+                    f"Осколок {info['color']} цвета "
+                    f"закончится через 🕐 {h} ч {m} мин\n"
+                    f"📍 Локация: {location}"
+                )
 
             if now < land:
                 h, m = format_delta_hm(land - now)
-                return f"Осколок {info['color']} цвета упадёт через 🕐 {h} ч {m} мин"
+                location = get_shard_location(today)
+                return (
+                    f"Осколок {info['color']} цвета "
+                    f"упадёт через 🕐 {h} ч {m} мин\n"
+                    f"📍 Локация: {location}"
+                )
         else:
             h, m = format_delta_hm(land - now)
-            return f"Осколок {info['color']} цвета упадёт через 🕐 {h} ч {m} мин"
+            location = get_shard_location(today)
+            return (
+                f"Осколок {info['color']} цвета "
+                f"упадёт через 🕐 {h} ч {m} мин\n"
+                f"📍 Локация: {location}"
+            )
 
     return None
 
