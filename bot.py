@@ -83,10 +83,12 @@ async def shards(message: Message):
         await message.answer("Сегодня осколков нет ❌")
         return
 
-    color, day_num, month = next_info
+    color, day_num, month, location = next_info
+
     await message.answer(
         f"Сегодня осколков нет ❌\n"
-        f"Следующий осколок {color} цвета упадёт 🗓️ {day_num} {month}"
+        f"Следующий осколок {color} цвета упадёт 🗓️ {day_num} {month}\n"
+        f"📍 Локация: {location}"
     )
 
 
