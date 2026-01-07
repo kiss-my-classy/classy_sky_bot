@@ -45,7 +45,7 @@ def format_spirits_message() -> str:
         if now < start:
             return (
                 f"🕺 {name}\n"
-                f"📅 {start.strftime('%d.%m %H:%M')} — {end.strftime('%d.%m %H:%M')}"
+                f"📅 {start.strftime('%d.%m')} — {end.strftime('%d.%m')}"
             )
 
         # дух уже активен
