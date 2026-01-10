@@ -6,19 +6,11 @@ from aiogram.filters import Command
 from aiogram.types import Message
 
 from parser import (
-    get_date,
-    list_daily,
     get_shard_status,
     get_next_shard_info,
     get_events,
-    calculate_season_progress,
-    format_season_message,
-    calculate_event_progress,
-    format_event_message,
     calculate_candles,
     format_candle_message,
-    format_spirits_message,
-    format_children_list,
     format_wing_levels
 )
 
@@ -38,37 +30,12 @@ async def start(message: Message):
     await message.answer(
         "Привет, путешественник! ✨\n"
         "Я помогу тебе не пропустить важное в игре Sky: Children of the Light\n\n"
-        "✅ /daily — дейлики\n"
         "💠 /shards — когда падают осколки\n"
         "🔥 /schedule — время фарма\n"
-        "🌸 /seasons — информация о сезоне\n"
-        "🎟️ /events — информация о событии\n"
         "🕯️ /candles — подсчёт свечей\n"
-        "🕺 /spirits — информация о странствующих духах\n\n"
-        "Дополнительные функции:\n"
-        "🌝 /light_locations — информация о крылатом свете\n"
         "⚡️ /light_level — информация об уровнях крыльев\n\n"
         "🔄 Информация об обновлениях - @classy_sky_dev"
     )
-
-
-@dp.message(Command("daily"))
-async def daily(message: Message):
-    tasks = list_daily()
-
-    if not tasks:
-        await message.answer(
-            "Создатель ещё спит и не обновил задания 💤\n"
-            "Простите за неудобства :("
-        )
-        return
-    text = [f"✅ Ежедневные задания за {get_date()} ✅\n"]
-    for task in tasks:
-        text.append(f"📌 {task}")
-
-    await message.answer("\n".join(text))
-
-
 
 @dp.message(Command("shards"))
 async def shards(message: Message):
@@ -96,30 +63,6 @@ async def shards(message: Message):
 async def schedule(message: Message):
     events = get_events()
     await message.answer("🕯️ Фарм:\n\n" + "\n".join(events))
-
-
-@dp.message(Command("seasons"))
-async def season(message: Message):
-    stats = calculate_season_progress()
-    text = format_season_message(stats)
-
-    if not text:
-        await message.answer("🌱 Сейчас активного сезона нет")
-        return
-
-    await message.answer(text)
-
-@dp.message(Command("events"))
-async def event(message: Message):
-    stats = calculate_event_progress()
-    text = format_event_message(stats)
-
-    if not text:
-        await message.answer("💤 Сейчас активных событий нет")
-        return
-
-    await message.answer(text)
-
 
 @dp.message(Command("candles"))
 async def candles(message: Message):
@@ -177,21 +120,6 @@ async def candles(message: Message):
     text = format_candle_message(result)
     await message.answer(text)
 
-@dp.message(Command("spirits"))
-async def spirits(message: Message):
-    text = format_spirits_message()
-
-    if not text:
-        await message.answer("😞 Информации о ближайшем странствующем духе нет")
-        return
-
-    await message.answer(text)
-
-@dp.message(Command("light_locations"))
-async def children(message: Message):
-    text = format_children_list()
-    await message.answer(text)
-
 @dp.message(Command("light_level"))
 async def wings(message: Message):
     text = format_wing_levels()
@@ -200,7 +128,6 @@ async def wings(message: Message):
 # ================= запуск =================
 async def main():
     await dp.start_polling(bot)
-
 
 if __name__ == "__main__":
     asyncio.run(main())
